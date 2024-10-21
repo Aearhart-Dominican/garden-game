@@ -8,14 +8,14 @@ garden.preload = function() {
 
 garden.create = function() {
 
-    this.seeds = 0
+    this.seeds = 4
     this.seedTimer = 0
-    this.seedSpeed = 4000
+    this.seedSpeed = 20000
 
-    this.seedText = this.add.text(10, 185, 'Seeds: 0', { fontSize: '16px', fill: '#fff' });
+    this.seedText = this.add.text(10, 185, 'Seeds: 0', { fontSize: '16px', fill: '#fff', resolution: 10, fontFamily: 'helvetica' });
 
     this.cash = 0;
-    this.cashText = this.add.text(128, 185, 'Cash: 0', { fontSize: '16px', fill: '#fff' });
+    this.cashText = this.add.text(128, 185, 'Cash: 0', { fontSize: '16px', fill: '#fff', resolution: 10, fontFamily: 'helvetica' });
 
     this.pots = this.add.group()
 
@@ -33,6 +33,11 @@ garden.create = function() {
         pot.on('pointerdown', potClick);
     }, garden)
 
+    this.buy = this.add.sprite(250, 192, 'pots', 'pot0')
+
+    this.buy.setInteractive();
+    this.buy.on('pointerdown', buySeed)
+
 }
 
 garden.update = function(time) {
@@ -45,7 +50,6 @@ garden.update = function(time) {
     this.cashText.setText('Cash: ' + this.cash)
 
     Phaser.Actions.Call(this.pots.getChildren(), potUpdate, this)
-
 }
 
 let config = {
@@ -62,9 +66,9 @@ potClick = function() {
     if (garden.seeds > 0 && this.age == 0) {
         garden.seeds -= 1
         this.age = 1
-        this.ageTime = garden.time.now + 10000
+        this.ageTime = garden.time.now + 5000
     } else if (this.age == 5) {
-        garden.cash += 10
+        garden.cash += 30
         this.age = 0
     }
 }
@@ -72,7 +76,7 @@ potClick = function() {
 potUpdate = function(pot) {
 
     if (garden.time.now > pot.ageTime && pot.age < 5 && pot.age != 0) {
-        pot.ageTime += 10000
+        pot.ageTime += 5000
         pot.age += 1
     }
 
@@ -97,4 +101,11 @@ potUpdate = function(pot) {
             break;
     }
     
+}
+
+buySeed = function() {
+    if (garden.cash >= 10) {
+        garden.cash -= 10;
+        garden.seeds += 1
+    }
 }

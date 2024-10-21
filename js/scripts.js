@@ -3,10 +3,17 @@ let garden = new Phaser.Scene("Game")
 garden.init = function() {}
 
 garden.preload = function() {
-
+    this.load.image('pot', 'assets/pot.png')
 }
 
 garden.create = function() {
+    this.pots = this.add.group()
+
+    for (x = 24; x < config.width; x += 32) {
+        for (y = 24; y < config.height; y += 32) {
+            this.pots.create(x, y, 'pot')
+        }
+    }
 
 }
 

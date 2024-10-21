@@ -14,6 +14,9 @@ garden.create = function() {
 
     this.seedText = this.add.text(10, 185, 'Seeds: 0', { fontSize: '16px', fill: '#fff' });
 
+    this.cash = 0;
+    this.cashText = this.add.text(128, 185, 'Cash: 0', { fontSize: '16px', fill: '#fff' });
+
     this.pots = this.add.group()
 
     for (x = 24; x < config.width; x += 32) {
@@ -39,6 +42,7 @@ garden.update = function(time) {
     }
 
     this.seedText.setText('Seeds: ' + this.seeds)
+    this.cashText.setText('Cash: ' + this.cash)
 
     Phaser.Actions.Call(this.pots.getChildren(), potUpdate, this)
 
@@ -55,16 +59,19 @@ let config = {
 let game = new Phaser.Game(config);
 
 potClick = function() {
-    if (garden.seeds > 0) {
+    if (garden.seeds > 0 && this.age == 0) {
         garden.seeds -= 1
         this.age = 1
         this.ageTime = garden.time.now + 10000
+    } else if (this.age == 5) {
+        garden.cash += 10
+        this.age = 0
     }
 }
 
 potUpdate = function(pot) {
 
-    if (garden.time.now > pot.ageTime && pot.age < 5) {
+    if (garden.time.now > pot.ageTime && pot.age < 5 && pot.age != 0) {
         pot.ageTime += 10000
         pot.age += 1
     }
